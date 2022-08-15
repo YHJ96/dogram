@@ -53,13 +53,19 @@ function Feed({ idx, feedData, setFeedData, FeedImgSrc }) {
     };
   };
 
+  const createModal = () => {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose}>
+      <button onClick={updateFeed}>수정</button>
+      <button onClick={deleteFeed}>삭제</button>
+    </Modal>
+    );
+  }
+
   return (
     <FeedContainer>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <button onClick={updateFeed}>수정</button>
-        <button onClick={deleteFeed}>삭제</button>
-      </Modal>
+      {isOpen ? createModal() : null}
 
       <FeedHeader>
         <AvatarGroup>
