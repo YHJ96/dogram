@@ -49,6 +49,7 @@ const IconGroup = styled.div`
 const NavIcon = styled.img`
   width: ${props => props.width || "24px"};
   height: ${props => props.height || "24px"};
+  cursor: pointer;
 `;
 
 const AvatarIcon = styled.img`
