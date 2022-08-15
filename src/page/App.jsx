@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import Feed from "../components/Feed";
 import Recommend from "../components/Recommend";
@@ -9,7 +9,13 @@ function App() {
 
     const createFeed = () => {
         return feedData.map((item, index) => {
-            return <Feed key={index} FeedImgSrc={item} />
+            return <Feed 
+              key={index}
+              idx={index} 
+              feedData={feedData} 
+              setFeedData={setFeedData} 
+              FeedImgSrc={item} 
+            />
         });
     };
 
