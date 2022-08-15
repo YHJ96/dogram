@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { avatar, more, love, arrow, text } from "../../images/index";
+import Modal from '../Modal';
 import {
   FeedContainer,
   FeedHeader,
@@ -22,59 +23,114 @@ import {
   FeedButton
 } from './style';
 
-function Feed() {
+function Feed({ 
+  idx, 
+  feedData, 
+  setFeedData, 
+  id, 
+  imgURL, 
+  avatarURL,
+  likeId,
+  likeLength
+  }) {
+  const inputRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+  const handleOnClick = () => setIsOpen(true);
+  const deleteFeed = () => {
+    const result = [...feedData];
+    result.splice(idx, 1);
+    setFeedData(result);
+    onClose();
+  };
+
+  const updateFeed = () => {
+    inputRef.current.click();
+    onClose();
+  };
+
+  const handleOnChange = ({ target }) => {
+    const result = [...feedData];
+    const file = target.files[0];
+    const reader = new FileReader();
+    if (!file.type.match("image/.*")) return alert("이미지 파일만 가능합니다.");
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      result[idx] = reader.result;
+      setFeedData(result);
+    };
+  };
+
+  const createModal = () => {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose}>
+      <button onClick={updateFeed}>수정</button>
+      <button onClick={deleteFeed}>삭제</button>
+    </Modal>
+    );
+  }
+
   return (
-      <FeedContainer>
-        <FeedHeader>
-          <AvatarGroup>
-            <Avatar src={avatar} />
-            <AvatarText>YHJ96</AvatarText>
-          </AvatarGroup>
-          <HeadIconGroup>
-            <Icon src={more}></Icon>
-          </HeadIconGroup>
-        </FeedHeader>
+    <FeedContainer>
 
-        <FeedImgGroup>
-          <FeedImg/>
-        </FeedImgGroup>
+      {isOpen ? createModal() : null}
 
-        <FeedFooter>
-          <FooterIconGroup>
-            <Icon width={"20px"} height={"20ppx"} src={love}/>
-            <Icon width={"20px"} height={"20ppx"} src={text}/>
-            <Icon width={"20px"} height={"20ppx"} src={arrow}/>
-          </FooterIconGroup>
+      <FeedHeader>
+        <AvatarGroup>
+          <Avatar src={imgURL} />
+          <AvatarText>{id}</AvatarText>
+        </AvatarGroup>
+        <HeadIconGroup>
+          <Icon src={more} onClick={handleOnClick}/>
+        </HeadIconGroup>
+      </FeedHeader>
 
-          <LikeGroup>
-            <Avatar width={"20px"} height={"20px"} src={avatar}/>
-            <LikeText>
-              <span>YHJ96</span>님 
-              <span> 외 67명</span>이 
-              좋아합니다
-            </LikeText>
-          </LikeGroup>
+      <FeedImgGroup>
+        <FeedImg src={imgURL} alt={"IMG"}/>
+      </FeedImgGroup>
 
-          <CommentLength>댓글 2개</CommentLength>
+      <FeedFooter>
+        <FooterIconGroup>
+          <Icon width={"20px"} height={"20ppx"} src={love} />
+          <Icon width={"20px"} height={"20ppx"} src={text} />
+          <Icon width={"20px"} height={"20ppx"} src={arrow} />
+        </FooterIconGroup>
 
-          <CommentGroup>
-            <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-            <Icon src={more}/>
-          </CommentGroup>
+        <LikeGroup>
+          <Avatar width={"20px"} height={"20px"} src={avatarURL} />
+          <LikeText>
+            <span>{likeId}</span>님
+            <span> 외 {likeLength}명</span>이
+            좋아합니다
+          </LikeText>
+        </LikeGroup>
 
-          <CommentGroup>
-            <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-            <Icon src={more}/>
-          </CommentGroup>
+        <CommentLength>댓글 2개</CommentLength>
 
-          <FeedForm>
-            <FeedInput placeholder="댓글 달기..."/>
-            <FeedButton act={true}>게시</FeedButton>
-          </FeedForm>
+        <CommentGroup>
+          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
+          <Icon src={more} />
+        </CommentGroup>
 
-        </FeedFooter>
+        <CommentGroup>
+          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
+          <Icon src={more} />
+        </CommentGroup>
 
-      </FeedContainer>
+        <FeedForm>
+          <FeedInput placeholder="댓글 달기..." />
+          <FeedButton act={true}>게시</FeedButton>
+        </FeedForm>
+
+      </FeedFooter>
+      <input
+        ref={inputRef}
+        type={"file"}
+        accept="image/*"
+        onChange={handleOnChange}
+        style={{ display: "none" }}
+      />
+    </FeedContainer>
   );
 }
 

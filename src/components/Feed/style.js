@@ -15,6 +15,9 @@ const FeedHeader = styled.div`
 const Icon = styled.img`
   width: ${props => props.width || "24px"};
   height: ${props => props.height || "24px"};
+  cursor: pointer;
+  object-fit: cover;
+  object-position: center;
 `;
 
 const AvatarGroup = styled.div`
@@ -49,6 +52,7 @@ const FeedImgGroup = styled.div`
 const FeedImg = styled.img`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `;
 
 const FeedFooter = styled.footer`

@@ -1,5 +1,5 @@
 import React from 'react'
-import { 
+import {
   RecommendContainer,
   RecommendTitle,
   RecommendBox,
@@ -18,15 +18,15 @@ function Recommend() {
 
       <RecommendBox>
         <AvatarGroup>
-        <Avatar />
-        <AvatarTextGroup>
-          <AvatarTitle>YHJ96</AvatarTitle>
-          <AvatarDescription>YHJ96님 외 5명이 팔로우합니다</AvatarDescription>
-        </AvatarTextGroup>
+          <Avatar />
+          <AvatarTextGroup>
+            <AvatarTitle>YHJ96</AvatarTitle>
+            <AvatarDescription>YHJ96님 외 5명이 팔로우합니다</AvatarDescription>
+          </AvatarTextGroup>
         </AvatarGroup>
         <FollowButton>팔로우</FollowButton>
       </RecommendBox>
-      
+
     </RecommendContainer>
   )
 }
