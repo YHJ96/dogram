@@ -31,7 +31,7 @@ function Feed({ idx, feedData, setFeedData, FeedImgSrc }) {
 
   const deleteFeed = () => {
     const result = [...feedData];
-    result.splice(0, 1);
+    result.splice(idx, 1);
     setFeedData(result);
     onClose();
   };
