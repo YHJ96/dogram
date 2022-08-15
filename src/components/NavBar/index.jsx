@@ -15,7 +15,14 @@ function NavBar({ feedData, setFeedData }) {
     if (!file.type.match("image/.*")) return alert("이미지 파일만 가능합니다.");
     reader.readAsDataURL(file);
     reader.onload = () => {
-      result.push(reader.result);
+      const item = {
+        id: "YHJ96",
+        imgURL: reader.result, 
+        avatarURL: avatar,
+        likeId: "codestates",
+        likeLength: 1,
+      };
+      result.push(item);
       setFeedData(result);
     };
   };

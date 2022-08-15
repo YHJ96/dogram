@@ -23,12 +23,20 @@ import {
   FeedButton
 } from './style';
 
-function Feed({ idx, feedData, setFeedData, FeedImgSrc }) {
+function Feed({ 
+  idx, 
+  feedData, 
+  setFeedData, 
+  id, 
+  imgURL, 
+  avatarURL,
+  likeId,
+  likeLength
+  }) {
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
-
   const deleteFeed = () => {
     const result = [...feedData];
     result.splice(idx, 1);
@@ -69,8 +77,8 @@ function Feed({ idx, feedData, setFeedData, FeedImgSrc }) {
 
       <FeedHeader>
         <AvatarGroup>
-          <Avatar src={avatar} />
-          <AvatarText>YHJ96</AvatarText>
+          <Avatar src={imgURL} />
+          <AvatarText>{id}</AvatarText>
         </AvatarGroup>
         <HeadIconGroup>
           <Icon src={more} onClick={handleOnClick}/>
@@ -78,7 +86,7 @@ function Feed({ idx, feedData, setFeedData, FeedImgSrc }) {
       </FeedHeader>
 
       <FeedImgGroup>
-        <FeedImg src={FeedImgSrc} alt={"IMG"}/>
+        <FeedImg src={imgURL} alt={"IMG"}/>
       </FeedImgGroup>
 
       <FeedFooter>
@@ -89,10 +97,10 @@ function Feed({ idx, feedData, setFeedData, FeedImgSrc }) {
         </FooterIconGroup>
 
         <LikeGroup>
-          <Avatar width={"20px"} height={"20px"} src={avatar} />
+          <Avatar width={"20px"} height={"20px"} src={avatarURL} />
           <LikeText>
-            <span>YHJ96</span>님
-            <span> 외 67명</span>이
+            <span>{likeId}</span>님
+            <span> 외 {likeLength}명</span>이
             좋아합니다
           </LikeText>
         </LikeGroup>
