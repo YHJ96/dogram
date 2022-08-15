@@ -22,7 +22,7 @@ import {
   FeedButton
 } from './style';
 
-function Feed() {
+function Feed({ FeedImgSrc }) {
   return (
     <FeedContainer>
       <FeedHeader>
@@ -36,7 +36,7 @@ function Feed() {
       </FeedHeader>
 
       <FeedImgGroup>
-        <FeedImg />
+        <FeedImg src={FeedImgSrc} alt={"IMG"}/>
       </FeedImgGroup>
 
       <FeedFooter>
