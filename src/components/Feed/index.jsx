@@ -24,57 +24,57 @@ import {
 
 function Feed() {
   return (
-      <FeedContainer>
-        <FeedHeader>
-          <AvatarGroup>
-            <Avatar src={avatar} />
-            <AvatarText>YHJ96</AvatarText>
-          </AvatarGroup>
-          <HeadIconGroup>
-            <Icon src={more}></Icon>
-          </HeadIconGroup>
-        </FeedHeader>
+    <FeedContainer>
+      <FeedHeader>
+        <AvatarGroup>
+          <Avatar src={avatar} />
+          <AvatarText>YHJ96</AvatarText>
+        </AvatarGroup>
+        <HeadIconGroup>
+          <Icon src={more}></Icon>
+        </HeadIconGroup>
+      </FeedHeader>
 
-        <FeedImgGroup>
-          <FeedImg/>
-        </FeedImgGroup>
+      <FeedImgGroup>
+        <FeedImg />
+      </FeedImgGroup>
 
-        <FeedFooter>
-          <FooterIconGroup>
-            <Icon width={"20px"} height={"20ppx"} src={love}/>
-            <Icon width={"20px"} height={"20ppx"} src={text}/>
-            <Icon width={"20px"} height={"20ppx"} src={arrow}/>
-          </FooterIconGroup>
+      <FeedFooter>
+        <FooterIconGroup>
+          <Icon width={"20px"} height={"20ppx"} src={love} />
+          <Icon width={"20px"} height={"20ppx"} src={text} />
+          <Icon width={"20px"} height={"20ppx"} src={arrow} />
+        </FooterIconGroup>
 
-          <LikeGroup>
-            <Avatar width={"20px"} height={"20px"} src={avatar}/>
-            <LikeText>
-              <span>YHJ96</span>님 
-              <span> 외 67명</span>이 
-              좋아합니다
-            </LikeText>
-          </LikeGroup>
+        <LikeGroup>
+          <Avatar width={"20px"} height={"20px"} src={avatar} />
+          <LikeText>
+            <span>YHJ96</span>님
+            <span> 외 67명</span>이
+            좋아합니다
+          </LikeText>
+        </LikeGroup>
 
-          <CommentLength>댓글 2개</CommentLength>
+        <CommentLength>댓글 2개</CommentLength>
 
-          <CommentGroup>
-            <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-            <Icon src={more}/>
-          </CommentGroup>
+        <CommentGroup>
+          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
+          <Icon src={more} />
+        </CommentGroup>
 
-          <CommentGroup>
-            <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-            <Icon src={more}/>
-          </CommentGroup>
+        <CommentGroup>
+          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
+          <Icon src={more} />
+        </CommentGroup>
 
-          <FeedForm>
-            <FeedInput placeholder="댓글 달기..."/>
-            <FeedButton act={true}>게시</FeedButton>
-          </FeedForm>
+        <FeedForm>
+          <FeedInput placeholder="댓글 달기..." />
+          <FeedButton act={true}>게시</FeedButton>
+        </FeedForm>
 
-        </FeedFooter>
+      </FeedFooter>
 
-      </FeedContainer>
+    </FeedContainer>
   );
 }
 

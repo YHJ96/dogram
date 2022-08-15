@@ -14,7 +14,7 @@ function NavBar() {
           <NavIcon src={plus} />
           <NavIcon src={compass} />
           <NavIcon src={love} />
-          <AvatarIcon src={avatar}/>
+          <AvatarIcon src={avatar} />
         </IconGroup>
       </NavContainer>
     </Nav>

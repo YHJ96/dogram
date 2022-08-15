@@ -7,13 +7,13 @@ import { MainContainer, FeedSection } from '../page/style';
 function App() {
     return (
         <React.Fragment>
-            <NavBar/>
+            <NavBar />
             <MainContainer>
                 <FeedSection>
-                    <Feed/>
-                    <Feed/>
+                    <Feed />
+                    <Feed />
                 </FeedSection>
-                <Recommend/>
+                <Recommend />
             </MainContainer>
         </React.Fragment>
     )
