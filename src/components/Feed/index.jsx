@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { avatar, more, love, arrow, text } from "../../images/index";
+import Modal from '../Modal';
 import {
   FeedContainer,
   FeedHeader,
@@ -22,16 +23,51 @@ import {
   FeedButton
 } from './style';
 
-function Feed({ FeedImgSrc }) {
+function Feed({ idx, feedData, setFeedData, FeedImgSrc }) {
+  const inputRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+  const handleOnClick = () => setIsOpen(true);
+
+  const deleteFeed = () => {
+    const result = [...feedData];
+    result.splice(0, 1);
+    setFeedData(result);
+    onClose();
+  };
+
+  const updateFeed = () => {
+    inputRef.current.click();
+    onClose();
+  };
+
+  const handleOnChange = ({ target }) => {
+    const result = [...feedData];
+    const file = target.files[0];
+    const reader = new FileReader();
+    if (!file.type.match("image/.*")) return alert("이미지 파일만 가능합니다.");
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      result[idx] = reader.result;
+      setFeedData(result);
+    };
+  };
+
   return (
     <FeedContainer>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <button onClick={updateFeed}>수정</button>
+        <button onClick={deleteFeed}>삭제</button>
+      </Modal>
+
       <FeedHeader>
         <AvatarGroup>
           <Avatar src={avatar} />
           <AvatarText>YHJ96</AvatarText>
         </AvatarGroup>
         <HeadIconGroup>
-          <Icon src={more}></Icon>
+          <Icon src={more} onClick={handleOnClick}/>
         </HeadIconGroup>
       </FeedHeader>
 
@@ -73,7 +109,13 @@ function Feed({ FeedImgSrc }) {
         </FeedForm>
 
       </FeedFooter>
-
+      <input
+        ref={inputRef}
+        type={"file"}
+        accept="image/*"
+        onChange={handleOnChange}
+        style={{ display: "none" }}
+      />
     </FeedContainer>
   );
 }
