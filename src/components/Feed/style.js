@@ -15,6 +15,7 @@ const FeedHeader = styled.div`
 const Icon = styled.img`
   width: ${props => props.width || "24px"};
   height: ${props => props.height || "24px"};
+  cursor: pointer;
 `;
 
 const AvatarGroup = styled.div`
