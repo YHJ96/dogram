@@ -3,27 +3,26 @@ import propTypes from "prop-types"
 import { ModalContainer, ModalContentContainer, ButtonGroup, ModalButton } from '../Modal/style'
 
 function Modal({ isOpen, onClose, children }) {
-
   const modalRef = useRef(null);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.cssText = `
+    document.body.style.cssText = `
       position: fixed; 
       top: -${window.scrollY}px;
       overflow-y: scroll;
       width: 100%;
-      `;
-    } else {
+    `;
+
+    return () => {
       const scrollY = document.body.style.top;
       document.body.style.cssText = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    }
-  }, [isOpen]);
+    };
+  }, []);
 
   useEffect(() => {
     window.addEventListener("mousedown", (e) => {
-      if (modalRef.current.contains(e.target)) return;
+      if (!modalRef.current || modalRef.current.contains(e.target)) return;
       onClose();
     });
   }, [onClose]);
@@ -50,6 +49,6 @@ Modal.propTypes = {
 
 Modal.defaultProps = {
   isOpen: false,
-  onClose: () => {},
+  onClose: () => { },
   children: null
 }
