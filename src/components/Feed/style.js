@@ -88,21 +88,6 @@ const CommentLength = styled.span`
   font-size: 0.7rem;
 `;
 
-const CommentGroup = styled.div`
-  display: flex;
-  padding: 0 0.7rem;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CommnetText = styled.div`
-  font-size: 0.875rem;
-  font-family: "Noto Sans KR";
-  & span {
-    font-weight: bold;
-  }
-`;
-
 const FeedForm = styled.form`
   height: 40px;
   border-top: 1px solid #e6e6e6;
@@ -141,9 +126,7 @@ export {
   FooterIconGroup,
   LikeGroup,
   LikeText,
-  CommentGroup,
   CommentLength,
-  CommnetText,
   FeedForm,
   FeedInput,
   FeedButton

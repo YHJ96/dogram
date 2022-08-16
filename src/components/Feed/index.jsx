@@ -17,12 +17,11 @@ import {
   LikeGroup,
   LikeText,
   CommentLength,
-  CommentGroup,
-  CommnetText,
   FeedForm,
   FeedInput,
   FeedButton
 } from './style';
+import Commnet from "../Comment";
 
 function Feed({
   idx,
@@ -37,9 +36,11 @@ function Feed({
 }) {
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [comment, setComment] = useState([]);
+  const [inputValue, setInputValue] = useState("");
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
-  
+
   const deleteFeed = () => {
     const result = [...feedData];
     result.splice(idx, 1);
@@ -72,6 +73,27 @@ function Feed({
       </Modal>
     );
   }
+
+  const createComment = () => {
+    return comment.map((item, index) => {
+      return <Commnet 
+      key={index} 
+      idx={index} 
+      id={item?.id} 
+      text={item?.text}
+      comment={comment}
+      setComment={setComment}
+      />
+    });
+  }
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    const result = [...comment];
+    result.push({ id: "YHJ96", text: inputValue });
+    setComment(result);
+    setInputValue("");
+  };
 
   return (
     <FeedContainer>
@@ -108,21 +130,20 @@ function Feed({
           </LikeText>
         </LikeGroup>
 
-        <CommentLength>댓글 2개</CommentLength>
+        <CommentLength>{comment.length !== 0 ? `댓글 ${comment.length}개` : null}</CommentLength>
 
-        <CommentGroup>
-          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-          <Icon src={more} />
-        </CommentGroup>
+        {createComment()}
 
-        <CommentGroup>
-          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-          <Icon src={more} />
-        </CommentGroup>
-
-        <FeedForm>
-          <FeedInput placeholder="댓글 달기..." />
-          <FeedButton act={true}>게시</FeedButton>
+        <FeedForm onSubmit={handleOnSubmit}>
+          <FeedInput placeholder="댓글 달기..." 
+          onChange={(e) => setInputValue(e.target.value)}
+          value={inputValue}
+          />
+          <FeedButton 
+          act={inputValue.length ? true : false} 
+          disabled={inputValue.length ? false : true} 
+          type={"submit"}
+          >게시</FeedButton>
         </FeedForm>
 
       </FeedFooter>
