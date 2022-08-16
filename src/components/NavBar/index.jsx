@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import propTypes from "prop-types";
-import { home, arrow, plus, compass, love, avatar } from '../../images';
+import { home, arrow, plus, compass, love, avatar, codestateAvatar } from '../../images';
 import { Nav, NavContainer, Logo, NavInput, IconGroup, NavIcon, AvatarIcon } from './style';
 
 function NavBar({ feedData, setFeedData }) {
@@ -19,6 +19,7 @@ function NavBar({ feedData, setFeedData }) {
         id: "YHJ96",
         imgURL: reader.result, 
         avatarURL: avatar,
+        likeAvatarURL: codestateAvatar,
         likeId: "codestates",
         likeLength: 1,
       };
