@@ -38,7 +38,7 @@ function Recommend({ recommendData }) {
   )
 }
 
-export default Recommend;
+export default React.memo(Recommend);
 
 Recommend.propTypes = {
   recommendData: propTypes.array
