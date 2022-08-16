@@ -1,4 +1,6 @@
-import React from 'react'
+import React from 'react';
+import propTypes from "prop-types";
+import { randomRange } from '../../utils/random';
 import {
   RecommendContainer,
   RecommendTitle,
@@ -11,24 +13,37 @@ import {
   FollowButton
 } from './style';
 
-function Recommend() {
-  return (
-    <RecommendContainer>
-      <RecommendTitle>회원님을 위한 추천</RecommendTitle>
+function Recommend({ recommendData }) {
 
-      <RecommendBox>
+  const createRecommendBox = () => {
+    return recommendData.map((item, index) => {
+      return <RecommendBox key={index}>
         <AvatarGroup>
-          <Avatar />
+          <Avatar src={item?.avatarURL}/>
           <AvatarTextGroup>
-            <AvatarTitle>YHJ96</AvatarTitle>
-            <AvatarDescription>YHJ96님 외 5명이 팔로우합니다</AvatarDescription>
+            <AvatarTitle>{item?.id}</AvatarTitle>
+            <AvatarDescription>{item?.followId}님 외 {randomRange(3, 30)}명이 팔로우합니다</AvatarDescription>
           </AvatarTextGroup>
         </AvatarGroup>
         <FollowButton>팔로우</FollowButton>
       </RecommendBox>
+    });
+  }
 
+  return (
+    <RecommendContainer>
+      <RecommendTitle>회원님을 위한 추천</RecommendTitle>
+      {createRecommendBox()}
     </RecommendContainer>
   )
 }
 
 export default Recommend;
+
+Recommend.propTypes = {
+  recommendData: propTypes.array
+};
+
+Recommend.defaultProps = {
+  recommendData: []
+}
