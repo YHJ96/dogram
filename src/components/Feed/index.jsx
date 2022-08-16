@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { more, love, arrow, text } from "../../images/index";
+import { more, arrow, text, loveBlack, loveRed } from "../../images/index";
 import propTypes from 'prop-types';
 import Modal from '../Modal';
 import {
@@ -41,6 +41,7 @@ function Feed({
   const [commentIdx, setCommentIdx] = useState(0);
   const [isChangeButton, setIsChangeButton] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [isLike, setIsLike] = useState(false);
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
 
@@ -148,7 +149,18 @@ function Feed({
 
       <FeedFooter>
         <FooterIconGroup>
-          <Icon width={"20px"} height={"20ppx"} src={love} />
+          <Icon width={"20px"} height={"20ppx"} onClick={() => {
+            const result = [...feedData];
+            if (isLike) {
+              result[idx]["likeLength"] -= 1;
+              setFeedData(result);
+              setIsLike(!isLike);
+            } else {
+              result[idx]["likeLength"] += 1;
+              setFeedData(result);
+              setIsLike(!isLike);
+            }
+          }} src={isLike ? loveRed : loveBlack} />
           <Icon width={"20px"} height={"20ppx"} src={text} />
           <Icon width={"20px"} height={"20ppx"} src={arrow} />
         </FooterIconGroup>
