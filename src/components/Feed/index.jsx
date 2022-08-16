@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
-import { avatar, more, love, arrow, text } from "../../images/index";
+import { more, love, arrow, text } from "../../images/index";
+import propTypes from 'prop-types';
 import Modal from '../Modal';
 import {
   FeedContainer,
@@ -23,20 +24,22 @@ import {
   FeedButton
 } from './style';
 
-function Feed({ 
-  idx, 
-  feedData, 
-  setFeedData, 
-  id, 
-  imgURL, 
+function Feed({
+  idx,
+  feedData,
+  setFeedData,
+  id,
   avatarURL,
+  imgURL,
+  likeAvatarURL,
   likeId,
   likeLength
-  }) {
+}) {
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
+  
   const deleteFeed = () => {
     const result = [...feedData];
     result.splice(idx, 1);
@@ -64,9 +67,9 @@ function Feed({
   const createModal = () => {
     return (
       <Modal isOpen={isOpen} onClose={onClose}>
-      <button onClick={updateFeed}>수정</button>
-      <button onClick={deleteFeed}>삭제</button>
-    </Modal>
+        <button onClick={updateFeed}>수정</button>
+        <button onClick={deleteFeed}>삭제</button>
+      </Modal>
     );
   }
 
@@ -77,16 +80,16 @@ function Feed({
 
       <FeedHeader>
         <AvatarGroup>
-          <Avatar src={imgURL} />
+          <Avatar src={avatarURL} />
           <AvatarText>{id}</AvatarText>
         </AvatarGroup>
         <HeadIconGroup>
-          <Icon src={more} onClick={handleOnClick}/>
+          <Icon src={more} onClick={handleOnClick} />
         </HeadIconGroup>
       </FeedHeader>
 
       <FeedImgGroup>
-        <FeedImg src={imgURL} alt={"IMG"}/>
+        <FeedImg src={imgURL} alt={"IMG"} />
       </FeedImgGroup>
 
       <FeedFooter>
@@ -97,7 +100,7 @@ function Feed({
         </FooterIconGroup>
 
         <LikeGroup>
-          <Avatar width={"20px"} height={"20px"} src={avatarURL} />
+          <Avatar width={"20px"} height={"20px"} src={likeAvatarURL} />
           <LikeText>
             <span>{likeId}</span>님
             <span> 외 {likeLength}명</span>이
@@ -135,3 +138,27 @@ function Feed({
 }
 
 export default Feed;
+
+Feed.propTypes = {
+  idx: propTypes.number,
+  feedData: propTypes.array.isRequired,
+  setFeedData: propTypes.func.isRequired,
+  id: propTypes.string,
+  avatarURL: propTypes.string,
+  imgURL: propTypes.string,
+  likeAvatarURL: propTypes.string,
+  likeId: propTypes.string,
+  likeLength: propTypes.number
+}
+
+Feed.defaultProps = {
+  idx: 1,
+  feedData: [],
+  setFeedData: () => { },
+  id: "",
+  avatarURL: "",
+  imgURL: "",
+  likeAvatarURL: "",
+  likeId: "",
+  likeLength: 0
+}
