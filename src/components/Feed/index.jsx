@@ -80,7 +80,7 @@ function Feed({
     return (
       <Modal isOpen={isOpen} onClose={onClose}>
         <button onClick={updateFeed}>수정</button>
-        <button onClick={deleteFeed}>삭제</button>
+        <button onClick={deleteFeed} style={{ color: "#ED4956" }}>삭제</button>
       </Modal>
     );
   }
