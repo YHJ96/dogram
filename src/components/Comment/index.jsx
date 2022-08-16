@@ -25,7 +25,7 @@ function Commnet({ idx, id, text, comment, setComment, setCommentIdx, setIsChang
     return (
       <Modal isOpen={isOpen} onClose={onClose}>
         <button onClick={updateComment}>수정</button>
-        <button onClick={deleteComment}>삭제</button>
+        <button onClick={deleteComment} style={{ color: "#ED4956" }}>삭제</button>
       </Modal>
     );
   }
