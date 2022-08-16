@@ -15,3 +15,4 @@ export const love = loveImg;
 export const avatar = avatarImg;
 export const more = moreImg;
 export const text = textImg;
+export const codestateAvatar = "https://www.codestates.com/assets/codestates-ci.png";

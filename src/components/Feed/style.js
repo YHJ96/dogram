@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { codestateAvatar } from '../../images/index';
 
 const FeedContainer = styled.div`
   border: 1px solid #e6e6e6;
@@ -31,6 +32,8 @@ const Avatar = styled.img`
   width: ${props => props.width || "32px"};
   height: ${props => props.height || "32px"};
   border-radius: 50%;
+  object-fit: ${props => props.src === codestateAvatar ? "contain" : "cover"};
+  object-position: center;
 `;
 
 const AvatarText = styled.span`

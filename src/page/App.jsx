@@ -4,28 +4,39 @@ import Feed from "../components/Feed";
 import Recommend from "../components/Recommend";
 import axios from "axios";
 import { MainContainer, FeedSection } from '../page/style';
-
-const likeLength = [11, 3, 29, 67, 153];
+import { randomRange } from '../utils/random';
 
 function App() {
     const URL = process.env.REACT_APP_URL;
     const [feedData, setFeedData] = useState([]);
-    
+    const [recommendData, setRecommendData] = useState([]);
+
     useEffect(() => {
         const getdata = async () => {
-            const result = [];
+            const feedResult = [];
+            const recommendResult = [];
             const response = await (await axios.get(URL)).data;
-            for(let i = 0; i < response.length; i += 2) {
-                result.push({ 
-                    id: (response[i].id).toLowerCase(), 
-                    imgURL: response[i].url, 
-                    avatarURL: response[i+1].url,
-                    likeId: response[i+1].id,
-                    likeLength: likeLength[i/2],
+            for (let i = 0; i < response.length; i += 2) {
+                feedResult.push({
+                    id: (response[i].id).toLowerCase(),
+                    imgURL: response[i].url,
+                    likeAvatarURL: response[i + 1].url,
+                    likeId: (response[i + 1].id).toLowerCase(),
+                    likeLength: randomRange(10, 150),
                 });
             }
-            console.log(result);
-            setFeedData(result);
+            const avatar = await (await axios.get(URL)).data;
+            for (let i = 0; i < avatar.length; i++) {
+                if (i < 5) {
+                    feedResult[i]["avatarURL"] = avatar[i].url;
+                    recommendResult.push({ id: (avatar[i].id).toLowerCase() });
+                } else {
+                    recommendResult[i - 5]["avatarURL"] = avatar[i].url;
+                    recommendResult[i - 5]["followId"] = (avatar[i].id).toLowerCase();
+                }
+            };
+            setRecommendData(recommendResult);
+            setFeedData(feedResult);
         };
         getdata();
     }, [URL]);
@@ -37,11 +48,12 @@ function App() {
                 idx={index}
                 feedData={feedData}
                 setFeedData={setFeedData}
-                id={item.id}
-                imgURL={item.imgURL}
-                avatarURL={item.avatarURL}
-                likeId={item.id}
-                likeLength={item.likeLength}
+                id={item?.id}
+                imgURL={item?.imgURL}
+                avatarURL={item?.avatarURL}
+                likeAvatarURL={item?.likeAvatarURL}
+                likeId={item?.likeId}
+                likeLength={item?.likeLength}
             />
         });
     };
@@ -53,7 +65,7 @@ function App() {
                 <FeedSection>
                     {createFeed()}
                 </FeedSection>
-                <Recommend />
+                <Recommend recommendData={recommendData} />
             </MainContainer>
         </React.Fragment>
     )
