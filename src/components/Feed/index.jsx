@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { more, love, arrow, text } from "../../images/index";
 import propTypes from 'prop-types';
 import Modal from '../Modal';
@@ -34,9 +34,12 @@ function Feed({
   likeId,
   likeLength
 }) {
+  const feedRef = useRef(null);
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [comment, setComment] = useState([]);
+  const [commentIdx, setCommentIdx] = useState(0);
+  const [isChangeButton, setIsChangeButton] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
@@ -52,6 +55,13 @@ function Feed({
     inputRef.current.click();
     onClose();
   };
+
+  useEffect(() => {
+    window.addEventListener("mousedown", (e) => {
+      if (!feedRef.current || feedRef.current.contains(e.target)) return;
+      setIsChangeButton(false);
+    });
+  })
 
   const handleOnChange = ({ target }) => {
     const result = [...feedData];
@@ -76,15 +86,27 @@ function Feed({
 
   const createComment = () => {
     return comment.map((item, index) => {
-      return <Commnet 
-      key={index} 
-      idx={index} 
-      id={item?.id} 
-      text={item?.text}
-      comment={comment}
-      setComment={setComment}
+      return <Commnet
+        key={index}
+        idx={index}
+        id={item?.id}
+        text={item?.text}
+        comment={comment}
+        setComment={setComment}
+        setCommentIdx={setCommentIdx}
+        setIsChangeButton={setIsChangeButton}
       />
     });
+  }
+
+  const a1 = (e) => {
+    e.preventDefault();
+    const result = [...comment];
+    result[commentIdx]["text"] = inputValue;
+    if (inputValue.trim().length === 0) alert("빈 문자열입니다.");
+    setComment(result);
+    setIsChangeButton(false);
+    setInputValue("");
   }
 
   const handleOnSubmit = (e) => {
@@ -95,8 +117,18 @@ function Feed({
     setInputValue("");
   };
 
+  const toggleButton = () => {
+    return isChangeButton
+      ? <FeedButton act={true}>수정</FeedButton>
+      : <FeedButton
+        act={inputValue.length ? true : false}
+        disabled={inputValue.length ? false : true}
+        type={"submit"}
+      >게시</FeedButton>
+  }
+
   return (
-    <FeedContainer>
+    <FeedContainer ref={feedRef}>
 
       {isOpen ? createModal() : null}
 
@@ -130,20 +162,16 @@ function Feed({
           </LikeText>
         </LikeGroup>
 
-        <CommentLength>{comment.length !== 0 ? `댓글 ${comment.length}개` : null}</CommentLength>
+        {comment.length !== 0 ? <CommentLength>댓글 {comment.length}개</CommentLength> : null}
 
         {createComment()}
 
-        <FeedForm onSubmit={handleOnSubmit}>
-          <FeedInput placeholder="댓글 달기..." 
-          onChange={(e) => setInputValue(e.target.value)}
-          value={inputValue}
+        <FeedForm onSubmit={isChangeButton ? a1 : handleOnSubmit}>
+          <FeedInput placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
+            onChange={(e) => setInputValue(e.target.value)}
+            value={inputValue}
           />
-          <FeedButton 
-          act={inputValue.length ? true : false} 
-          disabled={inputValue.length ? false : true} 
-          type={"submit"}
-          >게시</FeedButton>
+          {toggleButton()}
         </FeedForm>
 
       </FeedFooter>

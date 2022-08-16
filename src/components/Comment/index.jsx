@@ -3,10 +3,16 @@ import Modal from "../Modal";
 import { more } from '../../images/index';
 import { CommentGroup, CommnetText, Icon } from './style';
 
-function Commnet({ idx, id, text, comment, setComment }) {
+function Commnet({ idx, id, text, comment, setComment, setCommentIdx, setIsChangeButton }) {
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
+
+  const updateComment = () => {
+    setCommentIdx(idx);
+    setIsChangeButton(true);
+    onClose();
+  }
 
   const deleteComment = () => {
     const result = [...comment];
@@ -18,7 +24,7 @@ function Commnet({ idx, id, text, comment, setComment }) {
   const createModal = () => {
     return (
       <Modal isOpen={isOpen} onClose={onClose}>
-        <button onClick={()=>{}}>수정</button>
+        <button onClick={updateComment}>수정</button>
         <button onClick={deleteComment}>삭제</button>
       </Modal>
     );
