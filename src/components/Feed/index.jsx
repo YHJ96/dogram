@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { more, love, arrow, text } from "../../images/index";
+import React, { useState, useRef, useEffect } from "react";
+import { more, arrow, text, loveBlack, loveRed } from "../../images/index";
 import propTypes from 'prop-types';
 import Modal from '../Modal';
 import {
@@ -17,12 +17,11 @@ import {
   LikeGroup,
   LikeText,
   CommentLength,
-  CommentGroup,
-  CommnetText,
   FeedForm,
   FeedInput,
   FeedButton
 } from './style';
+import Commnet from "../Comment";
 
 function Feed({
   idx,
@@ -35,11 +34,17 @@ function Feed({
   likeId,
   likeLength
 }) {
+  const feedRef = useRef(null);
   const inputRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [comment, setComment] = useState([]);
+  const [commentIdx, setCommentIdx] = useState(0);
+  const [isChangeButton, setIsChangeButton] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [isLike, setIsLike] = useState(false);
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
-  
+
   const deleteFeed = () => {
     const result = [...feedData];
     result.splice(idx, 1);
@@ -51,6 +56,13 @@ function Feed({
     inputRef.current.click();
     onClose();
   };
+
+  useEffect(() => {
+    window.addEventListener("mousedown", (e) => {
+      if (!feedRef.current || feedRef.current.contains(e.target)) return;
+      setIsChangeButton(false);
+    });
+  })
 
   const handleOnChange = ({ target }) => {
     const result = [...feedData];
@@ -73,8 +85,51 @@ function Feed({
     );
   }
 
+  const createComment = () => {
+    return comment.map((item, index) => {
+      return <Commnet
+        key={index}
+        idx={index}
+        id={item?.id}
+        text={item?.text}
+        comment={comment}
+        setComment={setComment}
+        setCommentIdx={setCommentIdx}
+        setIsChangeButton={setIsChangeButton}
+      />
+    });
+  }
+
+  const a1 = (e) => {
+    e.preventDefault();
+    const result = [...comment];
+    result[commentIdx]["text"] = inputValue;
+    if (inputValue.trim().length === 0) alert("빈 문자열입니다.");
+    setComment(result);
+    setIsChangeButton(false);
+    setInputValue("");
+  }
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    const result = [...comment];
+    result.push({ id: "YHJ96", text: inputValue });
+    setComment(result);
+    setInputValue("");
+  };
+
+  const toggleButton = () => {
+    return isChangeButton
+      ? <FeedButton act={true}>수정</FeedButton>
+      : <FeedButton
+        act={inputValue.length ? true : false}
+        disabled={inputValue.length ? false : true}
+        type={"submit"}
+      >게시</FeedButton>
+  }
+
   return (
-    <FeedContainer>
+    <FeedContainer ref={feedRef}>
 
       {isOpen ? createModal() : null}
 
@@ -94,7 +149,18 @@ function Feed({
 
       <FeedFooter>
         <FooterIconGroup>
-          <Icon width={"20px"} height={"20ppx"} src={love} />
+          <Icon width={"20px"} height={"20ppx"} onClick={() => {
+            const result = [...feedData];
+            if (isLike) {
+              result[idx]["likeLength"] -= 1;
+              setFeedData(result);
+              setIsLike(!isLike);
+            } else {
+              result[idx]["likeLength"] += 1;
+              setFeedData(result);
+              setIsLike(!isLike);
+            }
+          }} src={isLike ? loveRed : loveBlack} />
           <Icon width={"20px"} height={"20ppx"} src={text} />
           <Icon width={"20px"} height={"20ppx"} src={arrow} />
         </FooterIconGroup>
@@ -108,21 +174,16 @@ function Feed({
           </LikeText>
         </LikeGroup>
 
-        <CommentLength>댓글 2개</CommentLength>
+        {comment.length !== 0 ? <CommentLength>댓글 {comment.length}개</CommentLength> : null}
 
-        <CommentGroup>
-          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-          <Icon src={more} />
-        </CommentGroup>
+        {createComment()}
 
-        <CommentGroup>
-          <CommnetText><span>YHJ96</span> 소통해요~</CommnetText>
-          <Icon src={more} />
-        </CommentGroup>
-
-        <FeedForm>
-          <FeedInput placeholder="댓글 달기..." />
-          <FeedButton act={true}>게시</FeedButton>
+        <FeedForm onSubmit={isChangeButton ? a1 : handleOnSubmit}>
+          <FeedInput placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
+            onChange={(e) => setInputValue(e.target.value)}
+            value={inputValue}
+          />
+          {toggleButton()}
         </FeedForm>
 
       </FeedFooter>

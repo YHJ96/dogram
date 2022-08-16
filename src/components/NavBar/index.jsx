@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import propTypes from "prop-types";
-import { home, arrow, plus, compass, love, avatar, codestateAvatar } from '../../images';
+import { home, arrow, plus, compass, loveBlack, avatar, codestateAvatar } from '../../images';
 import { Nav, NavContainer, Logo, NavInput, IconGroup, NavIcon, AvatarIcon } from './style';
 
 function NavBar({ feedData, setFeedData }) {
@@ -38,7 +38,7 @@ function NavBar({ feedData, setFeedData }) {
           <NavIcon src={arrow} />
           <NavIcon src={plus} onClick={handleOnClickAddItem} />
           <NavIcon src={compass} />
-          <NavIcon src={love} />
+          <NavIcon src={loveBlack} />
           <AvatarIcon src={avatar} />
         </IconGroup>
       </NavContainer>
