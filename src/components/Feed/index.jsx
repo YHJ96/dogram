@@ -34,20 +34,19 @@ function Feed({
   likeId,
   likeLength
 }) {
-  // inputRef 추가
-  const inputRef = useRef(null);
   const feedRef = useRef(null);
   const fileLoaderRef = useRef(null);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isCheck, setIsCheck] = useState({ modal: false, like: false, button: false });
+
   const [comment, setComment] = useState([]);
   const [commentIdx, setCommentIdx] = useState(0);
   const [isChangeButton, setIsChangeButton] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLike, setIsLike] = useState(false);
 
-  const onClose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
+  const onOpen = () => setIsCheck({...isCheck, modal: true});
+  const onClose = () => setIsCheck({...isCheck, modal: false});
 
   useEffect(() => {
     window.addEventListener("mousedown", (e) => {
@@ -75,14 +74,14 @@ function Feed({
     if (!file.type.match("image/.*")) return alert("이미지 파일만 가능합니다.");
     reader.readAsDataURL(file);
     reader.onload = () => {
-      result[idx] = reader.result;
+      result[idx] = {...result[idx], imgURL: reader.result};
       setFeedData(result);
     };
   };
 
   const createModal = () => {
     return (
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isCheck.modal} onClose={onClose}>
         <button onClick={updateFeed}>수정</button>
         <button onClick={deleteFeed} style={{ color: "#ED4956" }}>삭제</button>
       </Modal>
@@ -148,7 +147,7 @@ function Feed({
   return (
     <FeedContainer ref={feedRef}>
 
-      {isOpen ? createModal() : null}
+      {isCheck.modal ? createModal() : null}
 
       <FeedHeader>
         <AvatarGroup>
@@ -186,7 +185,6 @@ function Feed({
 
         <FeedForm onSubmit={isChangeButton ? updateCommnet : createCommnet}>
           <FeedInput placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
-            ref={inputRef}
             onChange={(e) => setInputValue(e.target.value)}
             value={inputValue}
           />
