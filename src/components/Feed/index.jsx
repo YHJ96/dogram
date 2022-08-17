@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { more, arrow, text, loveBlack, loveRed } from "../../images/index";
 import { debounce } from '../../utils/debounce';
 import propTypes from 'prop-types';
@@ -47,11 +47,7 @@ function Feed({
   const onClose = () => setIsCheck({...isCheck, modal: false});
 
   const handleOnChangeCommentInput = (e) => setInputValue(e.target.value);
-  const debounceOnChange = debounce(handleOnChangeCommentInput, 500);
-
-  useEffect(() => {
-    console.log("render");
-  });
+  const debounceOnChange = debounce(handleOnChangeCommentInput, 200);
 
   useEffect(() => {
     window.addEventListener("mousedown", (e) => {
