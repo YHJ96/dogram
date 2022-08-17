@@ -37,13 +37,12 @@ function Feed({
   const feedRef = useRef(null);
   const fileLoaderRef = useRef(null);
 
-  const [isCheck, setIsCheck] = useState({ modal: false, like: false, button: false });
+  const [isCheck, setIsCheck] = useState({ modal: false, like: false });
+  const [isChangeButton, setIsChangeButton] = useState(false);
 
   const [comment, setComment] = useState([]);
   const [commentIdx, setCommentIdx] = useState(0);
-  const [isChangeButton, setIsChangeButton] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [isLike, setIsLike] = useState(false);
 
   const onOpen = () => setIsCheck({...isCheck, modal: true});
   const onClose = () => setIsCheck({...isCheck, modal: false});
@@ -53,7 +52,7 @@ function Feed({
       if (!feedRef.current || feedRef.current.contains(e.target)) return;
       setIsChangeButton(false);
     });
-  }, [isChangeButton]);
+  }, []);
 
   const deleteFeed = () => {
     const result = [...feedData];
@@ -133,14 +132,14 @@ function Feed({
 
   const handleOnClickLoveIcon = () => {
     const result = [...feedData];
-    if (isLike) {
+    if (isCheck.like) {
       result[idx]["likeLength"] -= 1;
       setFeedData(result);
-      setIsLike(!isLike);
+      setIsCheck({...isCheck, like: !isCheck.like});
     } else {
       result[idx]["likeLength"] += 1;
       setFeedData(result);
-      setIsLike(!isLike);
+      setIsCheck({...isCheck, like: !isCheck.like});
     }
   }
 
@@ -165,7 +164,7 @@ function Feed({
 
       <FeedFooter>
         <FooterIconGroup>
-          <Icon width={"20px"} height={"20ppx"} onClick={handleOnClickLoveIcon} src={isLike ? loveRed : loveBlack} />
+          <Icon width={"20px"} height={"20ppx"} onClick={handleOnClickLoveIcon} src={isCheck.like ? loveRed : loveBlack} />
           <Icon width={"20px"} height={"20ppx"} src={text} />
           <Icon width={"20px"} height={"20ppx"} src={arrow} />
         </FooterIconGroup>
