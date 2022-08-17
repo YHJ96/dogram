@@ -3,7 +3,7 @@ import Modal from "../Modal";
 import { more } from '../../images/index';
 import { CommentGroup, CommnetText, Icon } from './style';
 
-function Commnet({ 
+function Comment({ 
   idx, 
   id, 
   text, 
@@ -46,4 +46,4 @@ function Commnet({
   );
 }
 
-export default Commnet;
+export default Comment;
