@@ -7,6 +7,14 @@
 ## 💻 배포 페이지
 [dogram 배포 페이지](dogram-yhj96.netlify.app)
 
+<p align="center">
+  <img src="./data/화면1.gif">
+</p>
+
+<p align="center">
+  <img src="./data/화면2.gif">
+</p>
+
 ## ✅ 체크리스트
 
 - Feed
