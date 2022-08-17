@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { more, arrow, text, loveBlack, loveRed } from "../../images/index";
+import { debounce } from '../../utils/debounce';
 import propTypes from 'prop-types';
 import Modal from '../Modal';
 import {
@@ -39,12 +40,18 @@ function Feed({
 
   const [isCheck, setIsCheck] = useState({ modal: false, like: false });
   const [isChangeButton, setIsChangeButton] = useState(false);
-  
   const [comment, setComment] = useState({ data: [], currentIdx: 0 });
   const [inputValue, setInputValue] = useState("");
 
   const onOpen = () => setIsCheck({...isCheck, modal: true});
   const onClose = () => setIsCheck({...isCheck, modal: false});
+
+  const handleOnChangeCommentInput = (e) => setInputValue(e.target.value);
+  const debounceOnChange = debounce(handleOnChangeCommentInput, 500);
+
+  useEffect(() => {
+    console.log("render");
+  });
 
   useEffect(() => {
     window.addEventListener("mousedown", (e) => {
@@ -86,7 +93,7 @@ function Feed({
     );
   }
 
-  const createComment = () => {
+  const createCommentComponent = () => {
     return comment.data.map((item, index) => {
       return <Commnet
         key={index}
@@ -100,22 +107,22 @@ function Feed({
     });
   }
 
-  const updateCommnet = (e) => {
+  const updateComment = (e) => {
     e.preventDefault();
     const { data, currentIdx } = comment;
     data[currentIdx]["text"] = inputValue;
     if (inputValue.trim().length === 0) alert("빈 문자열입니다.");
     setComment({ data, currentIdx });
     setIsChangeButton(false);
-    setInputValue("");
+    e.target.reset();
   }
 
-  const createCommnet = (e) => {
+  const createComment = (e) => {
     e.preventDefault();
     const { data, currentIdx } = comment;
     data.push({ id: "YHJ96", text: inputValue });
     setComment({ data, currentIdx });
-    setInputValue("");
+    e.target.reset();
   };
 
   const toggleChangeButton = () => {
@@ -178,12 +185,11 @@ function Feed({
 
         {comment.data.length !== 0 ? <CommentLength>댓글 {comment.data.length}개</CommentLength> : null}
 
-        {createComment()}
+        {createCommentComponent()}
 
-        <FeedForm onSubmit={isChangeButton ? updateCommnet : createCommnet}>
+        <FeedForm onSubmit={isChangeButton ? updateComment : createComment}>
           <FeedInput placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
-            onChange={(e) => setInputValue(e.target.value)}
-            value={inputValue}
+            onChange={debounceOnChange}
           />
           {toggleChangeButton()}
         </FeedForm>
