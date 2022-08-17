@@ -43,7 +43,7 @@ function Comment({
   return (
     <CommentGroup>
       { isOpen ? createModal() : null }
-      <CommnetText><span>{id}</span> {text}</CommnetText>
+      <CommnetText><span>{id}</span>{text}</CommnetText>
       <Icon src={more} onClick={handleOnClick}/>
     </CommentGroup>
   );
