@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "../Modal";
+import propTypes from "prop-types";
 import { more } from '../../images/index';
 import { CommentGroup, CommnetText, Icon } from './style';
 
@@ -49,3 +50,23 @@ function Comment({
 }
 
 export default React.memo(Comment);
+
+Comment.propTypes = {
+  idx: propTypes.number,
+  inputRef: propTypes.object.isRequired, 
+  id: propTypes.string, 
+  text: propTypes.string, 
+  comment: propTypes.string.isRequired, 
+  setComment: propTypes.func.isRequired, 
+  setIsChangeButton: propTypes.func.isRequired 
+}
+
+Comment.defaultProps = {
+  idx: 0,
+  inputRef: {}, 
+  id: "", 
+  text: "", 
+  comment: "", 
+  setComment: () => {}, 
+  setIsChangeButton: () => {} 
+}
