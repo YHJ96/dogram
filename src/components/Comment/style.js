@@ -16,7 +16,7 @@ const CommnetText = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   & span {
-    padding-right: 0.3rem;
+    padding-right: 0.2rem;
     font-weight: bold;
   }
 `;
