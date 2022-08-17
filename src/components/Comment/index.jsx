@@ -4,7 +4,8 @@ import { more } from '../../images/index';
 import { CommentGroup, CommnetText, Icon } from './style';
 
 function Comment({ 
-  idx, 
+  idx,
+  inputRef, 
   id, 
   text, 
   comment, 
@@ -18,6 +19,7 @@ function Comment({
   const updateComment = () => {
     setComment({...comment, currentIdx: idx});
     setIsChangeButton(true);
+    inputRef.current.focus();
     onClose();
   }
 

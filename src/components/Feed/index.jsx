@@ -35,6 +35,7 @@ function Feed({
   likeId,
   likeLength
 }) {
+  const inputRef = useRef(null);
   const feedRef = useRef(null);
   const fileLoaderRef = useRef(null);
 
@@ -94,6 +95,7 @@ function Feed({
       return <Commnet
         key={index}
         idx={index}
+        inputRef={inputRef}
         id={item?.id}
         text={item?.text}
         comment={comment}
@@ -105,19 +107,22 @@ function Feed({
 
   const updateComment = (e) => {
     e.preventDefault();
+    if (inputValue.trim().length === 0) return alert("빈 문자열입니다.");
     const { data, currentIdx } = comment;
     data[currentIdx]["text"] = inputValue;
-    if (inputValue.trim().length === 0) alert("빈 문자열입니다.");
     setComment({ data, currentIdx });
     setIsChangeButton(false);
+    setInputValue("");
     e.target.reset();
   }
 
   const createComment = (e) => {
     e.preventDefault();
+    if (inputValue.trim().length === 0) return alert("빈 문자열입니다.");
     const { data, currentIdx } = comment;
     data.push({ id: "YHJ96", text: inputValue });
     setComment({ data, currentIdx });
+    setInputValue("");
     e.target.reset();
   };
 
@@ -184,7 +189,9 @@ function Feed({
         {createCommentComponent()}
 
         <FeedForm onSubmit={isChangeButton ? updateComment : createComment}>
-          <FeedInput placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
+          <FeedInput 
+            placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
+            ref={inputRef}
             onChange={debounceOnChange}
           />
           {toggleChangeButton()}
