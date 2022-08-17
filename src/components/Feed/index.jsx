@@ -39,9 +39,8 @@ function Feed({
 
   const [isCheck, setIsCheck] = useState({ modal: false, like: false });
   const [isChangeButton, setIsChangeButton] = useState(false);
-
-  const [comment, setComment] = useState([]);
-  const [commentIdx, setCommentIdx] = useState(0);
+  
+  const [comment, setComment] = useState({ data: [], currentIdx: 0 });
   const [inputValue, setInputValue] = useState("");
 
   const onOpen = () => setIsCheck({...isCheck, modal: true});
@@ -88,7 +87,7 @@ function Feed({
   }
 
   const createComment = () => {
-    return comment.map((item, index) => {
+    return comment.data.map((item, index) => {
       return <Commnet
         key={index}
         idx={index}
@@ -96,7 +95,6 @@ function Feed({
         text={item?.text}
         comment={comment}
         setComment={setComment}
-        setCommentIdx={setCommentIdx}
         setIsChangeButton={setIsChangeButton}
       />
     });
@@ -104,19 +102,19 @@ function Feed({
 
   const updateCommnet = (e) => {
     e.preventDefault();
-    const result = [...comment];
-    result[commentIdx]["text"] = inputValue;
+    const { data, currentIdx } = comment;
+    data[currentIdx]["text"] = inputValue;
     if (inputValue.trim().length === 0) alert("빈 문자열입니다.");
-    setComment(result);
+    setComment({ data, currentIdx });
     setIsChangeButton(false);
     setInputValue("");
   }
 
   const createCommnet = (e) => {
     e.preventDefault();
-    const result = [...comment];
-    result.push({ id: "YHJ96", text: inputValue });
-    setComment(result);
+    const { data, currentIdx } = comment;
+    data.push({ id: "YHJ96", text: inputValue });
+    setComment({ data, currentIdx });
     setInputValue("");
   };
 
@@ -178,7 +176,7 @@ function Feed({
           </LikeText>
         </LikeGroup>
 
-        {comment.length !== 0 ? <CommentLength>댓글 {comment.length}개</CommentLength> : null}
+        {comment.data.length !== 0 ? <CommentLength>댓글 {comment.data.length}개</CommentLength> : null}
 
         {createComment()}
 
