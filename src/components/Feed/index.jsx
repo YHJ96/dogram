@@ -34,16 +34,27 @@ function Feed({
   likeId,
   likeLength
 }) {
-  const feedRef = useRef(null);
+  // inputRef 추가
   const inputRef = useRef(null);
+  const feedRef = useRef(null);
+  const fileLoaderRef = useRef(null);
+
   const [isOpen, setIsOpen] = useState(false);
   const [comment, setComment] = useState([]);
   const [commentIdx, setCommentIdx] = useState(0);
   const [isChangeButton, setIsChangeButton] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLike, setIsLike] = useState(false);
+
   const onClose = () => setIsOpen(false);
-  const handleOnClick = () => setIsOpen(true);
+  const onOpen = () => setIsOpen(true);
+
+  useEffect(() => {
+    window.addEventListener("mousedown", (e) => {
+      if (!feedRef.current || feedRef.current.contains(e.target)) return;
+      setIsChangeButton(false);
+    });
+  }, [isChangeButton]);
 
   const deleteFeed = () => {
     const result = [...feedData];
@@ -53,18 +64,11 @@ function Feed({
   };
 
   const updateFeed = () => {
-    inputRef.current.click();
+    fileLoaderRef.current.click();
     onClose();
   };
 
-  useEffect(() => {
-    window.addEventListener("mousedown", (e) => {
-      if (!feedRef.current || feedRef.current.contains(e.target)) return;
-      setIsChangeButton(false);
-    });
-  })
-
-  const handleOnChange = ({ target }) => {
+  const handleFileUpLoaderChange = ({ target }) => {
     const result = [...feedData];
     const file = target.files[0];
     const reader = new FileReader();
@@ -100,7 +104,7 @@ function Feed({
     });
   }
 
-  const a1 = (e) => {
+  const updateCommnet = (e) => {
     e.preventDefault();
     const result = [...comment];
     result[commentIdx]["text"] = inputValue;
@@ -110,7 +114,7 @@ function Feed({
     setInputValue("");
   }
 
-  const handleOnSubmit = (e) => {
+  const createCommnet = (e) => {
     e.preventDefault();
     const result = [...comment];
     result.push({ id: "YHJ96", text: inputValue });
@@ -118,7 +122,7 @@ function Feed({
     setInputValue("");
   };
 
-  const toggleButton = () => {
+  const toggleChangeButton = () => {
     return isChangeButton
       ? <FeedButton act={true}>수정</FeedButton>
       : <FeedButton
@@ -126,6 +130,19 @@ function Feed({
         disabled={inputValue.length ? false : true}
         type={"submit"}
       >게시</FeedButton>
+  }
+
+  const handleOnClickLoveIcon = () => {
+    const result = [...feedData];
+    if (isLike) {
+      result[idx]["likeLength"] -= 1;
+      setFeedData(result);
+      setIsLike(!isLike);
+    } else {
+      result[idx]["likeLength"] += 1;
+      setFeedData(result);
+      setIsLike(!isLike);
+    }
   }
 
   return (
@@ -139,7 +156,7 @@ function Feed({
           <AvatarText>{id}</AvatarText>
         </AvatarGroup>
         <HeadIconGroup>
-          <Icon src={more} onClick={handleOnClick} />
+          <Icon src={more} onClick={onOpen} />
         </HeadIconGroup>
       </FeedHeader>
 
@@ -149,18 +166,7 @@ function Feed({
 
       <FeedFooter>
         <FooterIconGroup>
-          <Icon width={"20px"} height={"20ppx"} onClick={() => {
-            const result = [...feedData];
-            if (isLike) {
-              result[idx]["likeLength"] -= 1;
-              setFeedData(result);
-              setIsLike(!isLike);
-            } else {
-              result[idx]["likeLength"] += 1;
-              setFeedData(result);
-              setIsLike(!isLike);
-            }
-          }} src={isLike ? loveRed : loveBlack} />
+          <Icon width={"20px"} height={"20ppx"} onClick={handleOnClickLoveIcon} src={isLike ? loveRed : loveBlack} />
           <Icon width={"20px"} height={"20ppx"} src={text} />
           <Icon width={"20px"} height={"20ppx"} src={arrow} />
         </FooterIconGroup>
@@ -178,20 +184,21 @@ function Feed({
 
         {createComment()}
 
-        <FeedForm onSubmit={isChangeButton ? a1 : handleOnSubmit}>
+        <FeedForm onSubmit={isChangeButton ? updateCommnet : createCommnet}>
           <FeedInput placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
+            ref={inputRef}
             onChange={(e) => setInputValue(e.target.value)}
             value={inputValue}
           />
-          {toggleButton()}
+          {toggleChangeButton()}
         </FeedForm>
 
       </FeedFooter>
       <input
-        ref={inputRef}
+        ref={fileLoaderRef}
         type={"file"}
         accept="image/*"
-        onChange={handleOnChange}
+        onChange={handleFileUpLoaderChange}
         style={{ display: "none" }}
       />
     </FeedContainer>
