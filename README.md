@@ -5,7 +5,7 @@
 - 완성된 파일은 배포 홈페이지를 제공하여 확인할 수 있게 합니다.
 
 ## 💻 배포 페이지
-[dogram 배포 페이지](dogram-yhj96.netlify.app)
+[dogram 배포 페이지](https://dogram-yhj96.netlify.app/)
 
 <p align="center">
   <img src="./data/화면1.gif">
