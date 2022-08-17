@@ -7,6 +7,7 @@ import moreImg from './more.png';
 import textImg from './text.png';
 import loveBlackImg from './love-black.png';
 import loveRedImg from './love-red.png';
+import loadingImg from './loding.gif';
 
 export const home = homeImg;
 export const arrow = arrowImg;
@@ -18,3 +19,4 @@ export const text = textImg;
 export const loveBlack = loveBlackImg;
 export const loveRed = loveRedImg;
 export const codestateAvatar = "https://www.codestates.com/assets/codestates-ci.png";
+export const loding = loadingImg;

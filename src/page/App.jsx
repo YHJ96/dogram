@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Feed from "../components/Feed";
 import Recommend from "../components/Recommend";
+import Loding from "../components/Loding";
 import axios from "axios";
 import { MainContainer, FeedSection } from '../page/style';
 import { randomRange } from '../utils/random';
@@ -59,7 +60,8 @@ function App() {
     };
 
     return (
-        <React.Fragment>
+        (feedData.length !== 0)
+        ? <React.Fragment>
             <NavBar feedData={feedData} setFeedData={setFeedData} />
             <MainContainer>
                 <FeedSection>
@@ -67,7 +69,8 @@ function App() {
                 </FeedSection>
                 <Recommend recommendData={recommendData} />
             </MainContainer>
-        </React.Fragment>
+        </React.Fragment> 
+        : <Loding />
     )
 }
 

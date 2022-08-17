@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Modal from "../Modal";
+import propTypes from "prop-types";
 import { more } from '../../images/index';
 import { CommentGroup, CommnetText, Icon } from './style';
 
 function Comment({ 
-  idx, 
+  idx,
+  inputRef, 
   id, 
   text, 
   comment, 
@@ -18,6 +20,7 @@ function Comment({
   const updateComment = () => {
     setComment({...comment, currentIdx: idx});
     setIsChangeButton(true);
+    inputRef.current.focus();
     onClose();
   }
 
@@ -40,10 +43,30 @@ function Comment({
   return (
     <CommentGroup>
       { isOpen ? createModal() : null }
-      <CommnetText><span>{id}</span> {text}</CommnetText>
+      <CommnetText><span>{id}</span>{text}</CommnetText>
       <Icon src={more} onClick={handleOnClick}/>
     </CommentGroup>
   );
 }
 
 export default React.memo(Comment);
+
+Comment.propTypes = {
+  idx: propTypes.number,
+  inputRef: propTypes.object.isRequired, 
+  id: propTypes.string, 
+  text: propTypes.string, 
+  comment: propTypes.string.isRequired, 
+  setComment: propTypes.func.isRequired, 
+  setIsChangeButton: propTypes.func.isRequired 
+}
+
+Comment.defaultProps = {
+  idx: 0,
+  inputRef: {}, 
+  id: "", 
+  text: "", 
+  comment: "", 
+  setComment: () => {}, 
+  setIsChangeButton: () => {} 
+}
