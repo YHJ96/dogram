@@ -3,21 +3,28 @@ import Modal from "../Modal";
 import { more } from '../../images/index';
 import { CommentGroup, CommnetText, Icon } from './style';
 
-function Commnet({ idx, id, text, comment, setComment, setCommentIdx, setIsChangeButton }) {
+function Comment({ 
+  idx, 
+  id, 
+  text, 
+  comment, 
+  setComment, 
+  setIsChangeButton 
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const handleOnClick = () => setIsOpen(true);
 
   const updateComment = () => {
-    setCommentIdx(idx);
+    setComment({...comment, currentIdx: idx});
     setIsChangeButton(true);
     onClose();
   }
 
   const deleteComment = () => {
-    const result = [...comment];
-    result.splice(idx, 1);
-    setComment(result);
+    const { data, currentIdx } = comment;
+    data.splice(idx, 1);
+    setComment({ data, currentIdx });
     onClose();
   }
 
@@ -39,4 +46,4 @@ function Commnet({ idx, id, text, comment, setComment, setCommentIdx, setIsChang
   );
 }
 
-export default Commnet;
+export default React.memo(Comment);

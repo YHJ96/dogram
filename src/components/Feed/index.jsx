@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { more, arrow, text, loveBlack, loveRed } from "../../images/index";
+import { debounce } from '../../utils/debounce';
 import propTypes from 'prop-types';
 import Modal from '../Modal';
 import {
@@ -35,15 +36,25 @@ function Feed({
   likeLength
 }) {
   const feedRef = useRef(null);
-  const inputRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [comment, setComment] = useState([]);
-  const [commentIdx, setCommentIdx] = useState(0);
+  const fileLoaderRef = useRef(null);
+
+  const [isCheck, setIsCheck] = useState({ modal: false, like: false });
   const [isChangeButton, setIsChangeButton] = useState(false);
+  const [comment, setComment] = useState({ data: [], currentIdx: 0 });
   const [inputValue, setInputValue] = useState("");
-  const [isLike, setIsLike] = useState(false);
-  const onClose = () => setIsOpen(false);
-  const handleOnClick = () => setIsOpen(true);
+
+  const onOpen = () => setIsCheck({...isCheck, modal: true});
+  const onClose = () => setIsCheck({...isCheck, modal: false});
+
+  const handleOnChangeCommentInput = (e) => setInputValue(e.target.value);
+  const debounceOnChange = debounce(handleOnChangeCommentInput, 200);
+
+  useEffect(() => {
+    window.addEventListener("mousedown", (e) => {
+      if (!feedRef.current || feedRef.current.contains(e.target)) return;
+      setIsChangeButton(false);
+    });
+  }, []);
 
   const deleteFeed = () => {
     const result = [...feedData];
@@ -53,40 +64,33 @@ function Feed({
   };
 
   const updateFeed = () => {
-    inputRef.current.click();
+    fileLoaderRef.current.click();
     onClose();
   };
 
-  useEffect(() => {
-    window.addEventListener("mousedown", (e) => {
-      if (!feedRef.current || feedRef.current.contains(e.target)) return;
-      setIsChangeButton(false);
-    });
-  })
-
-  const handleOnChange = ({ target }) => {
+  const handleFileUpLoaderChange = ({ target }) => {
     const result = [...feedData];
     const file = target.files[0];
     const reader = new FileReader();
     if (!file.type.match("image/.*")) return alert("이미지 파일만 가능합니다.");
     reader.readAsDataURL(file);
     reader.onload = () => {
-      result[idx] = reader.result;
+      result[idx] = {...result[idx], imgURL: reader.result};
       setFeedData(result);
     };
   };
 
   const createModal = () => {
     return (
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isCheck.modal} onClose={onClose}>
         <button onClick={updateFeed}>수정</button>
         <button onClick={deleteFeed} style={{ color: "#ED4956" }}>삭제</button>
       </Modal>
     );
   }
 
-  const createComment = () => {
-    return comment.map((item, index) => {
+  const createCommentComponent = () => {
+    return comment.data.map((item, index) => {
       return <Commnet
         key={index}
         idx={index}
@@ -94,31 +98,30 @@ function Feed({
         text={item?.text}
         comment={comment}
         setComment={setComment}
-        setCommentIdx={setCommentIdx}
         setIsChangeButton={setIsChangeButton}
       />
     });
   }
 
-  const a1 = (e) => {
+  const updateComment = (e) => {
     e.preventDefault();
-    const result = [...comment];
-    result[commentIdx]["text"] = inputValue;
+    const { data, currentIdx } = comment;
+    data[currentIdx]["text"] = inputValue;
     if (inputValue.trim().length === 0) alert("빈 문자열입니다.");
-    setComment(result);
+    setComment({ data, currentIdx });
     setIsChangeButton(false);
-    setInputValue("");
+    e.target.reset();
   }
 
-  const handleOnSubmit = (e) => {
+  const createComment = (e) => {
     e.preventDefault();
-    const result = [...comment];
-    result.push({ id: "YHJ96", text: inputValue });
-    setComment(result);
-    setInputValue("");
+    const { data, currentIdx } = comment;
+    data.push({ id: "YHJ96", text: inputValue });
+    setComment({ data, currentIdx });
+    e.target.reset();
   };
 
-  const toggleButton = () => {
+  const toggleChangeButton = () => {
     return isChangeButton
       ? <FeedButton act={true}>수정</FeedButton>
       : <FeedButton
@@ -128,10 +131,23 @@ function Feed({
       >게시</FeedButton>
   }
 
+  const handleOnClickLoveIcon = () => {
+    const result = [...feedData];
+    if (isCheck.like) {
+      result[idx]["likeLength"] -= 1;
+      setFeedData(result);
+      setIsCheck({...isCheck, like: !isCheck.like});
+    } else {
+      result[idx]["likeLength"] += 1;
+      setFeedData(result);
+      setIsCheck({...isCheck, like: !isCheck.like});
+    }
+  }
+
   return (
     <FeedContainer ref={feedRef}>
 
-      {isOpen ? createModal() : null}
+      {isCheck.modal ? createModal() : null}
 
       <FeedHeader>
         <AvatarGroup>
@@ -139,7 +155,7 @@ function Feed({
           <AvatarText>{id}</AvatarText>
         </AvatarGroup>
         <HeadIconGroup>
-          <Icon src={more} onClick={handleOnClick} />
+          <Icon src={more} onClick={onOpen} />
         </HeadIconGroup>
       </FeedHeader>
 
@@ -149,18 +165,7 @@ function Feed({
 
       <FeedFooter>
         <FooterIconGroup>
-          <Icon width={"20px"} height={"20ppx"} onClick={() => {
-            const result = [...feedData];
-            if (isLike) {
-              result[idx]["likeLength"] -= 1;
-              setFeedData(result);
-              setIsLike(!isLike);
-            } else {
-              result[idx]["likeLength"] += 1;
-              setFeedData(result);
-              setIsLike(!isLike);
-            }
-          }} src={isLike ? loveRed : loveBlack} />
+          <Icon width={"20px"} height={"20ppx"} onClick={handleOnClickLoveIcon} src={isCheck.like ? loveRed : loveBlack} />
           <Icon width={"20px"} height={"20ppx"} src={text} />
           <Icon width={"20px"} height={"20ppx"} src={arrow} />
         </FooterIconGroup>
@@ -174,24 +179,23 @@ function Feed({
           </LikeText>
         </LikeGroup>
 
-        {comment.length !== 0 ? <CommentLength>댓글 {comment.length}개</CommentLength> : null}
+        {comment.data.length !== 0 ? <CommentLength>댓글 {comment.data.length}개</CommentLength> : null}
 
-        {createComment()}
+        {createCommentComponent()}
 
-        <FeedForm onSubmit={isChangeButton ? a1 : handleOnSubmit}>
+        <FeedForm onSubmit={isChangeButton ? updateComment : createComment}>
           <FeedInput placeholder={isChangeButton ? "수정할 내용을 입력해주세요." : "댓글 달기..."}
-            onChange={(e) => setInputValue(e.target.value)}
-            value={inputValue}
+            onChange={debounceOnChange}
           />
-          {toggleButton()}
+          {toggleChangeButton()}
         </FeedForm>
 
       </FeedFooter>
       <input
-        ref={inputRef}
+        ref={fileLoaderRef}
         type={"file"}
         accept="image/*"
-        onChange={handleOnChange}
+        onChange={handleFileUpLoaderChange}
         style={{ display: "none" }}
       />
     </FeedContainer>
